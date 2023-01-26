@@ -12,11 +12,16 @@ CREATE TABLE IF NOT EXISTS WORD (
 
   PRIMARY KEY (saados_id, word)
 );
-
-CREATE INDEX idx_word_word ON word(word);
 `
 
-export const createWordTable = (db: Client) => db.query(createTableText)
+const createIndex = `CREATE INDEX idx_word_word ON word(word);`
+
+export const createWordTable = async (db: Client) => {
+  await db.query(createTableText)
+  await db.query(createIndex).catch((e) => {
+    console.log(`\n${e}`)
+  })
+}
 
 export const insertWord = async (
   db: Client,
